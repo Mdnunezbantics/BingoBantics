@@ -4,7 +4,7 @@ from numpy.random import choice
 
 ## Meto la matriz, tengo que quitarle 12 aleatoriamente de los 27 totales para que se queden en 15
 def generar_carton():
-    lst1 = sorted(random.sample(range(9), 3))
+    lst1 = sorted(random.sample(range(1, 9), 3))
     lst2 = sorted(random.sample(range(10, 19), 3))
     lst3 = sorted(random.sample(range(20, 29), 3))
     lst4 = sorted(random.sample(range(30, 39), 3))
