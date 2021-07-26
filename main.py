@@ -94,6 +94,7 @@ print(carton)
 for digit in c2:
     if digit == "X":
         del carton[pos]
-    pos = pos + 1
-print(carton)
+    else:
+        pos = pos + 1
+print(len(carton))
 print(c2)
