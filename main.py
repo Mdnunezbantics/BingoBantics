@@ -5,6 +5,10 @@ import shutil
 from pathlib import Path
 import os
 from xml.dom import minidom
+
+import cairosvg
+from merge_pdf import merge
+
 from Funciones.crear_carpetas import crear_carpeta
 from Funciones.modifica_svg import prepara_carton_svg, svgtopng, prepara_carton_svg2, prepara_hoja_carton
 from Funciones.numerador import generar_carton, generar_plancha, generar_hoja_carton
@@ -20,25 +24,67 @@ bases = os.path.join(base_dir, "svgs")
 carton_svg = os.path.join(bases, svg_base)
 vaciopng_path = os.path.join(bases, png_vacio)
 
-temp = crear_carpeta("temp", salida_dir)
+temp_svg = crear_carpeta("temp_svg", salida_dir)
 rec_vacio = os.path.join(bases, "rect_vacio.svg")
-png = svgtopng(rec_vacio, temp, "vacio.png")
+png = svgtopng(rec_vacio, temp_svg, "vacio.png")
 # shutil.copy(vaciopng_path, temp)
 
 hoja_base_svg = os.path.join(bases, hoja_carton_base)
 copia_hoja = os.path.join(bases, "copia.svg")
 copia_base = shutil.copy(hoja_base_svg, copia_hoja)
-lista_cartones1 = generar_hoja_carton()
-lista_cartones2 = generar_hoja_carton()
-lista_cartones = lista_cartones1 + lista_cartones2
-prepara_hoja_carton(hoja_base_svg, temp, "%c", "%", "prueba1.svg", vaciopng_path, lista_cartones)
+# lista_cartones1 = generar_hoja_carton()
+# lista_cartones2 = generar_hoja_carton()
+# lista_cartones = lista_cartones1 + lista_cartones2
+# prepara_hoja_carton(hoja_base_svg, temp, "%c", "%", "pruebaxxxxx.svg", vaciopng_path, lista_cartones)
 
 lista_hojas = []
-for x in range(10):
-    lista_hojas.append(generar_hoja_carton())
+cantidad_hojas = 10
+item = []
+lista_cartones = []
+# un minuto en hacer la lista sin svg
+for page in range(cantidad_hojas):
+    cartones_para_hoja = []
+    # print(page)
+    for x in range(2):
+        item = generar_hoja_carton()
+        while item in lista_hojas:
+            item = generar_hoja_carton()
+        cartones_para_hoja = cartones_para_hoja + item
+        lista_hojas.append(item)
+        # cartones_para_hoja.append(item)
+    # print(item)
+    lista_cartones.append(cartones_para_hoja)
 
-print(len(generar_hoja_carton()))
-print(len(lista_hojas))
+page = 0
+for hojita in lista_cartones:
+    page = page + 1
+    prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", str(page) + "prueba" + ".svg", vaciopng_path, hojita)
+
+
+# print("--------------")
+# print(len(lista_hojas))
+# print("--------------")
+temp_pdf = crear_carpeta("temp_pdf", salida_dir)
+list_svg_dir = os.listdir(temp_svg)
+file_list = []
+list_svg_dir.sort()
+for file in list_svg_dir:
+    if ".svg" in file:
+        file_svg = os.path.join(temp_svg, file)
+        file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
+        cairosvg.svg2pdf(file_obj=open(file_svg, "rb"), write_to=file_pdf)
+        # print(file)
+
+
+pdf_file_name = "bingo.pdf"
+pdf_output = os.path.join(salida_dir, pdf_file_name)
+
+merge.Merge(pdf_output).merge_folder(temp_pdf)
+
+print("fusionado")
+
+
+
 # svg = prepara_carton_svg(carton_svg, temp, "%b", "%", "name_svg.svg", vaciopng_path)
 # svgtopng(svg, salida_dir, "name_png")
 # for x in range(10):

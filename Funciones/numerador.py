@@ -56,7 +56,7 @@ def generar_carton():
             carton.append(str(digito))
     return carton
 
-
+list_carton_general = []
 def generar_hoja_carton():
     forma_col_1 = ["X"]
     forma_col_2 = ["X", "X"]
@@ -122,7 +122,7 @@ def generar_hoja_carton():
                 num.remove(f2)
                 columna.append(f1)
                 columna.append(f2)
-            random.shuffle(columna)
+            # random.shuffle(columna)
             columnas[indi].append(columna)
 
     for num in range(6):
@@ -130,6 +130,7 @@ def generar_hoja_carton():
             # print(col[num])
             hoja[num].append(col[num])
     cartones = []
+
     for num in range(6):
         cart = []
         carton = copy.copy(hoja[num])
@@ -142,7 +143,7 @@ def generar_hoja_carton():
     return cartones
 
 
-list_carton_general = []
+
 
 
 def generar_plancha(cantidad):
