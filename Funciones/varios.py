@@ -1,16 +1,12 @@
-def saca_x(c):
+import copy
+
+
+def saca_x(dato):
+    carton2 = copy.copy(dato)
     pos = 0
-    for digit in c:
-        if digit == 'X':
-            del c[pos]
-        pos = pos + 1
-    pos = 0
-    for digit in c:
-        if digit == 'X':
-            del c[pos]
-        pos = pos + 1
-    for digit in c:
-        if digit == 'X':
-            del c[pos]
-        pos = pos + 1
-    return c
+    for digit in carton2:
+        if digit == "X":
+            del dato[pos]
+        else:
+            pos = pos + 1
+    return dato

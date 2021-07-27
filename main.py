@@ -7,7 +7,7 @@ import os
 from xml.dom import minidom
 from Funciones.crear_carpetas import crear_carpeta
 from Funciones.modifica_svg import prepara_carton_svg, svgtopng, prepara_carton_svg2
-from Funciones.numerador import generar_carton
+from Funciones.numerador import generar_carton, generar_plancha
 from Funciones.varios import saca_x
 
 salida = "output"
@@ -87,14 +87,12 @@ lista_carton = []
 
 
 
-carton = generar_carton()
-c2 = copy.copy(carton)
-pos = 0
-print(carton)
-for digit in c2:
-    if digit == "X":
-        del carton[pos]
-    else:
-        pos = pos + 1
-print(len(carton))
-print(c2)
+# carton = generar_carton()
+# print(carton)
+# c2 = saca_x(carton)
+list1 = generar_plancha(5)
+# print(len(list1))
+# if carton in list1:
+#     print("ok")
+# else:
+#     print("no ok")
