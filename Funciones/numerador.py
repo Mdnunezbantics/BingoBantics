@@ -125,10 +125,30 @@ def generar_carton2():
             random.shuffle(columna)
             columnas[indi].append(columna)
 
-    for carton in hoja:
-
-
-
+    # for carton in hoja:
+    #     for num in range(6):
+    #         for col in columnas:
+    #             carton.append(col[num])
+    for num in range(6):
+        for col in columnas:
+            # print(col[num])
+            hoja[num].append(col[num])
+    cartones = []
+    for num in range(6):
+        cart = []
+        carton = copy.copy(hoja[num])
+        hoja[num] = []
+        for fila in carton:
+            for digito in fila:
+                cart.append(str(digito))
+        cartones.append(cart)
+        hoja[num] = cart
+    print(cartones)
+    # print(carton2)
+    # print(carton3)
+    # print(carton4)
+    # print(carton5)
+    # print(carton6)
     # for i in datos:
     #     print(i)
 
