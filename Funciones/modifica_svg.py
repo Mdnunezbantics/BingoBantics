@@ -148,3 +148,63 @@ def prepara_carton_svg2(path_svg_entrada, path_svg_salida, ini_variable, fin_var
         xmldoc.writexml(out)
 
     return new_svg_file
+
+
+def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_variable, name_svg, png_path, list_carton):
+    xmldoc = minidom.parse(path_svg_entrada)
+    path_png = os.path.join(path_svg_salida, ntpath.basename(png_path))
+    dato = 0
+    id_carton = 0
+
+    for carton in list_carton:
+        id_carton = id_carton + 1
+        dato = 0
+        # print(id_carton)
+        for num in carton:
+            dato = dato + 1
+            variable = str(ini_variable) + str(id_carton) + "b" + str(dato) + str(fin_variable)
+            # print(variable)
+            image_id = "imagec" + str(id_carton) + "b-" + str(dato)
+            if num != "X":
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                tspan.firstChild.replaceWholeText(
+                                    str(tspan.firstChild.wholeText).replace(str(variable), str(num)))
+                        except Exception as e:
+                            # print(str(e))
+                            pass
+                try:
+                    for image in xmldoc.getElementsByTagName('image'):
+                        if image.getAttribute('id') == str(image_id):
+                            # print("se encontro variable")
+                            parent = image.parentNode
+                            parent.removeChild(image)
+                except Exception as e:
+                    # print(str(e))
+                    pass
+            else:
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                parent = tspan.parentNode
+                                parent.removeChild(tspan)
+                        except Exception as e:
+                            # print(str(e))
+                            pass
+
+                for image in xmldoc.getElementsByTagName('image'):
+                    if image.getAttribute('id') == str(image_id):
+                        # image.removeAttribute('xlink:href')
+                        image.removeAttribute('sodipodi:absref')
+                        image.setAttribute('sodipodi:absref', path_png)
+                        # image.setAttribute('xlink:href', str(png_url))
+
+    new_svg_file = os.path.join(path_svg_salida, name_svg)
+
+    with codecs.open(new_svg_file, "w", "utf-8") as out:
+        xmldoc.writexml(out)
+
+    return new_svg_file
