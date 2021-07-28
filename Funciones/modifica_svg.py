@@ -1,3 +1,6 @@
+import shutil
+
+from merge_pdf import merge
 import ntpath
 from xml.dom import minidom
 import os
@@ -5,6 +8,8 @@ import codecs
 from pathlib import Path
 import cairosvg
 from pdftopng import pdftopng
+
+from Funciones.crear_carpetas import crear_carpeta
 from Funciones.numerador import generar_carton
 
 
@@ -150,7 +155,7 @@ def prepara_carton_svg2(path_svg_entrada, path_svg_salida, ini_variable, fin_var
     return new_svg_file
 
 
-def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_variable, name_svg, png_path, list_carton):
+def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_variable, name_svg, png_path, list_carton, tira1, tira2, carton_id):
     xmldoc = minidom.parse(path_svg_entrada)
     path_png = os.path.join(path_svg_salida, ntpath.basename(png_path))
     dato = 0
@@ -202,9 +207,54 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
                         image.setAttribute('sodipodi:absref', path_png)
                         # image.setAttribute('xlink:href', str(png_url))
 
+    datos_variables = [ # convertirlo a diccionario
+        "%var_cliente%",
+        "%var_tira1%",
+        "%var_tira2%",
+        "%var1%",
+        "%var2%",
+        "%var3%",
+        "%var4%",
+        "%var5%",
+        "%var6%",
+        "%var7%",
+        "%serie%",
+        "%fecha%",
+    ]
+    for var in datos_variables:
+        for text in xmldoc.getElementsByTagName('text'):
+            for tspan in text.getElementsByTagName('tspan'):
+                try:
+                    if str(var) in tspan.firstChild.wholeText:
+                        tspan.firstChild.replaceWholeText(
+                            str(tspan.firstChild.wholeText).replace(str(var), str(num)))
+                except Exception as e:
+                    # print(str(e))
+                    pass
+
+
     new_svg_file = os.path.join(path_svg_salida, name_svg)
 
     with codecs.open(new_svg_file, "w", "utf-8") as out:
         xmldoc.writexml(out)
 
     return new_svg_file
+
+
+def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir):
+    temp_pdf = crear_carpeta("temp_pdf", output_path)
+    list_svg_dir = os.listdir(svgs_dir)
+    list_svg_dir.sort()
+    for file in list_svg_dir:
+        if ".svg" in file:
+            file_svg = os.path.join(svgs_dir, file)
+            file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
+            cairosvg.svg2pdf(file_obj=open(file_svg, "rb"), write_to=file_pdf)
+            # print(file)
+
+    # pdf_file_name = "bingo.pdf"
+    pdf_output = os.path.join(output_path, pdf_file_name)
+
+    merge.Merge(pdf_output).merge_folder(temp_pdf)
+    shutil.rmtree(temp_pdf)
+    return pdf_output
