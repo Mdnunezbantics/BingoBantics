@@ -37,6 +37,7 @@ copia_base = shutil.copy(hoja_base_svg, copia_hoja)
 
 lista_hojas = []
 cantidad_hojas = 10
+
 item = []
 lista_cartones = []
 # un minuto en hacer la lista sin svg
@@ -57,7 +58,7 @@ for page in range(cantidad_hojas):
     lista_cartones.append(cartones_para_hoja)
 
 
-hojas_por_pdf = 10
+hojas_por_pdf = 100
 print("preparamos pdf")
 pdf = 1
 page = 0
@@ -84,7 +85,7 @@ for hojita in lista_cartones:
 print(pdf)
 pdf_file_name = "bingo" + completa_numero(5, pdf) + ".pdf"
 multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg, png)
-shutil.rmtree(temp_svg)
+# shutil.rmtree(temp_svg)
 
 
 print("--------------")

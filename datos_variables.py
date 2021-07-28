@@ -1,5 +1,5 @@
-cliente = "BINGO LOS KILOMETROS"
-fecha = "19/7 al 23/07"
+cliente = "BINGO LOS AMIGOS"
+fecha = "12/10 al 16/10"
 serie = "1"
 bingo = "$350.000"
 linea = "$50.000"
