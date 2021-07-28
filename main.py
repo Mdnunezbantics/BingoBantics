@@ -6,7 +6,7 @@ from Funciones.crear_carpetas import crear_carpeta
 from Funciones.modifica_svg import prepara_carton_svg, svgtopng, prepara_carton_svg2, prepara_hoja_carton, \
     multi_svgs_a_1_pdf
 from Funciones.numerador import generar_carton, generar_plancha, generar_hoja_carton, generar_hoja_carton2
-from Funciones.varios import saca_x
+from Funciones.varios import saca_x, completa_numero
 
 salida = "output"
 svg_base = "Carton_base.svg"
@@ -22,9 +22,9 @@ bases = os.path.join(base_dir, "svgs")
 carton_svg = os.path.join(bases, svg_base)
 vaciopng_path = os.path.join(bases, png_vacio)
 
-temp_svg = crear_carpeta("temp_svg", salida_dir)
+
 rec_vacio = os.path.join(bases, "rect_vacio.svg")
-png = svgtopng(rec_vacio, temp_svg, "vacio.png")
+
 # shutil.copy(vaciopng_path, temp)
 
 hoja_base_svg = os.path.join(bases, hoja_carton_base)
@@ -57,32 +57,33 @@ for page in range(cantidad_hojas):
     lista_cartones.append(cartones_para_hoja)
 
 
-hojas_por_pdf = 100
+hojas_por_pdf = 10
 print("preparamos pdf")
 pdf = 1
 page = 0
 tira1 = 1
-tira2 = int(cantidad_hojas / 2)
+tira2 = cantidad_hojas + 1
 carton_id = 1
+temp_svg = crear_carpeta("carpeta_svgs" + completa_numero(5, pdf), salida_dir)
+png = svgtopng(rec_vacio, temp_svg, "vacio.png")
 for hojita in lista_cartones:
     page = page + 1
-
-    prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", str(page) + "prueba" + ".svg", vaciopng_path, hojita, tira1, tira2, carton_id)
+    hoja = completa_numero(5, page)
+    prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", "svg" + str(hoja) + ".svg", vaciopng_path, hojita, tira1,
+                        tira2, carton_id)
     tira1 = tira1 + 1
     tira2 = tira2 + 1
     carton_id = carton_id + 12
     if page == hojas_por_pdf:
-        pdf_file_name = "bingo" + str(pdf) + ".pdf"
-        multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg)
-        shutil.rmtree(temp_svg)
-        temp_svg = crear_carpeta("temp_svg", salida_dir)
-        png = svgtopng(rec_vacio, temp_svg, "vacio.png")
-
+        pdf_file_name = "bingo" + completa_numero(5, pdf) + ".pdf"
+        multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg, png)
         pdf = pdf + 1
+        temp_svg = crear_carpeta("carpeta_svgs" + completa_numero(5, pdf), salida_dir)
+        png = svgtopng(rec_vacio, temp_svg, "vacio.png")
         page = 0
 print(pdf)
-pdf_file_name = "bingo" + str(pdf) + ".pdf"
-multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg)
+pdf_file_name = "bingo" + completa_numero(5, pdf) + ".pdf"
+multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg, png)
 shutil.rmtree(temp_svg)
 
 
