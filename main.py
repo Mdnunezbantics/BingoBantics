@@ -8,7 +8,7 @@ from Funciones.numerador import generar_hoja_carton
 from Funciones.varios import completa_numero
 
 crear_pdf = True
-cantidad_hojas = 10
+cantidad_hojas = 5000
 hojas_por_pdf = 100
 
 salida = "output"
