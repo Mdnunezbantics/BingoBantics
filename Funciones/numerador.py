@@ -91,4 +91,4 @@ def generar_hoja_carton():
         if not check_cartones:
             finalizar = True
 
-    return cartones, len(list_carton_general)
+    return cartones

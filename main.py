@@ -8,11 +8,14 @@ from Funciones.numerador import generar_hoja_carton
 from Funciones.varios import completa_numero
 
 crear_pdf = True
+cantidad_hojas = 10
+hojas_por_pdf = 100
 
 salida = "output"
 svg_base = "Carton_base.svg"
 hoja_carton_base = "Hoja_carton_base.svg"
 png_vacio = "vacio.png"
+
 base_dir = Path(__file__).resolve().parent
 if salida in os.listdir(base_dir):
     print("se encotro carpeta la eliminaremos")
@@ -20,64 +23,58 @@ if salida in os.listdir(base_dir):
 print("se crea carpeta output")
 salida_dir = crear_carpeta(salida, base_dir)
 bases = os.path.join(base_dir, "svgs")
-carton_svg = os.path.join(bases, svg_base)
-vaciopng_path = os.path.join(bases, png_vacio)
 rec_vacio = os.path.join(bases, "rect_vacio.svg")
 hoja_base_svg = os.path.join(bases, hoja_carton_base)
-copia_hoja = os.path.join(bases, "copia.svg")
-copia_base = shutil.copy(hoja_base_svg, copia_hoja)
-lista_hojas = []
-cantidad_hojas = 1000
-item = []
-lista_cartones = []
-prueba = True
-a = 0
-revision = 0
-print("Generamos cartones")
-for page in range(cantidad_hojas):
-    cartones_para_hoja = []
-    for x in range(2):
-        item, revision = generar_hoja_carton()
-        while item in lista_hojas:
-            item, revision = generar_hoja_carton()
-        cartones_para_hoja = cartones_para_hoja + item
-        lista_hojas.append(item)
-    if a == 500:
-        print(revision)
-        a = 1
-    else:
-        a = a + 1
-    lista_cartones.append(cartones_para_hoja)
-print("Cartones Listos")
 
 if crear_pdf:
-    hojas_por_pdf = 100
-    print("preparamos pdfs")
+    print("Generamos cartones")
+    lista_cartones = []
+    lista_hojas = []
+    a = 0
+    item = []
+    for page in range(cantidad_hojas):
+        cartones_para_hoja = []
+        for x in range(2):
+            item = generar_hoja_carton()
+            while item in lista_hojas:
+                item = generar_hoja_carton()
+            cartones_para_hoja = cartones_para_hoja + item
+            lista_hojas.append(item)
+        if a == 500:
+            a = 1
+        else:
+            a = a + 1
+        lista_cartones.append(cartones_para_hoja)
+    print("Cartones Listos")
+    print("Preparamos PDFS")
     pdf = 1
     page = 0
     tira1 = 0
     tira2 = cantidad_hojas
     carton_id = 1
-    print("se crea carpeta_svgs" + completa_numero(5, pdf))
+    carton_id2 = (cantidad_hojas * 6) + 1
+    print("Se crea carpeta_svgs" + completa_numero(5, pdf))
     temp_svg = crear_carpeta("carpeta_svgs" + completa_numero(5, pdf), salida_dir)
-    png = svgtopng(rec_vacio, temp_svg, "vacio.png")
-    print("preparandos pdfs", " desde ", str(copy.copy(tira1)), " hasta ", str(copy.copy(tira1) + 100))
-    for hojita in lista_cartones:
+    png = svgtopng(rec_vacio, temp_svg, png_vacio)
+    print("Preparandos PDFS", " desde ", str(copy.copy(tira1)), " hasta ", str(copy.copy(tira1) + 100))
+    for hoja_carton in lista_cartones:
         page = page + 1
         hoja = completa_numero(5, page)
-        prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", "svg" + str(hoja) + ".svg", vaciopng_path, hojita, tira1,
-                            tira2, carton_id)
+        prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", "svg" + str(hoja) + ".svg", png, hoja_carton, tira1,
+                            tira2, carton_id, carton_id2)
         tira1 = tira1 + 1
         tira2 = tira2 + 1
-        carton_id = carton_id + 12
+        carton_id = carton_id + 6
+        carton_id2 = carton_id2 + 6
         if page == hojas_por_pdf:
-            print("preparandos pdfs", " desde ", str(copy.copy(tira1)), " hasta ", str(copy.copy(tira1) + 100))
+
             pdf_file_name = "bingo" + completa_numero(5, pdf) + ".pdf"
             multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg, png)
             pdf = pdf + 1
             temp_svg = crear_carpeta("carpeta_svgs" + completa_numero(5, pdf), salida_dir)
-            png = svgtopng(rec_vacio, temp_svg, "vacio.png")
+            png = svgtopng(rec_vacio, temp_svg, png_vacio)
             page = 0
+            print("Preparandos PDFS", " desde ", str(copy.copy(tira1)), " hasta ", str(copy.copy(tira1) + 100))
     pdf_file_name = "bingo" + completa_numero(5, pdf) + ".pdf"
     multi_svgs_a_1_pdf(pdf_file_name, salida_dir, temp_svg, png)
 

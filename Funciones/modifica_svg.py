@@ -23,7 +23,7 @@ def svgtopng(path_svg, path_png, png_name):
 
 
 def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_variable,
-                        name_svg, png_path, list_carton, tira1, tira2, carton_id):
+                        name_svg, png_path, list_carton, tira1, tira2, carton_id, carton_id2):
     xmldoc = minidom.parse(path_svg_entrada)
     path_png = os.path.join(path_svg_salida, ntpath.basename(png_path))
     id_carton = 0
@@ -74,12 +74,13 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
         "%carton4%": completa_numero(5, carton_id + 3),
         "%carton5%": completa_numero(5, carton_id + 4),
         "%carton6%": completa_numero(5, carton_id + 5),
-        "%carton7%": completa_numero(5, carton_id + 6),
-        "%carton8%": completa_numero(5, carton_id + 7),
-        "%carton9%": completa_numero(5, carton_id + 8),
-        "%carton10%": completa_numero(5, carton_id + 9),
-        "%carton11%": completa_numero(5, carton_id + 10),
-        "%carton12%": completa_numero(5, carton_id + 11),
+
+        "%carton7%": completa_numero(5, carton_id2 ),
+        "%carton8%": completa_numero(5, carton_id2 + 1),
+        "%carton9%": completa_numero(5, carton_id2 + 2),
+        "%carton10%": completa_numero(5, carton_id2 + 3),
+        "%carton11%": completa_numero(5, carton_id2 + 4),
+        "%carton12%": completa_numero(5, carton_id2 + 5),
     }
     for var in d_fijos:
         for text in xmldoc.getElementsByTagName('text'):
