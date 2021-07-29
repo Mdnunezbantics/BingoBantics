@@ -1,5 +1,5 @@
 cliente = "BINGO LOS AMIGOS"
-fecha = "12/10 al 16/10"
+fecha = "12/10/2021 al 16/10/2021"
 serie = "1"
 bingo = "$350.000"
 linea = "$50.000"
