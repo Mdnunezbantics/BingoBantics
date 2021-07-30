@@ -8,12 +8,15 @@ from Funciones.numerador import generar_hoja_carton
 from Funciones.varios import completa_numero
 
 crear_pdf = True
-cantidad_hojas = 5000
+cantidad_hojas = 10
 hojas_por_pdf = 100
 
 salida = "output"
 svg_base = "Carton_base.svg"
 hoja_carton_base = "Hoja_carton_base.svg"
+hoja_carton_base2 = "Hoja_carton_base2.svg"
+hoja_carton_base3 = "Hoja_carton_base3.svg"
+
 png_vacio = "vacio.png"
 
 base_dir = Path(__file__).resolve().parent
@@ -25,6 +28,8 @@ salida_dir = crear_carpeta(salida, base_dir)
 bases = os.path.join(base_dir, "svgs")
 rec_vacio = os.path.join(bases, "rect_vacio.svg")
 hoja_base_svg = os.path.join(bases, hoja_carton_base)
+
+
 
 if crear_pdf:
     print("Generamos cartones")
@@ -55,13 +60,16 @@ if crear_pdf:
     carton_id2 = (cantidad_hojas * 6) + 1
     print("Se crea carpeta_svgs" + completa_numero(5, pdf))
     temp_svg = crear_carpeta("carpeta_svgs" + completa_numero(5, pdf), salida_dir)
+
     png = svgtopng(rec_vacio, temp_svg, png_vacio)
+
     print("Preparandos PDFS", " desde ", str(copy.copy(tira1)), " hasta ", str(copy.copy(tira1) + 100))
     for hoja_carton in lista_cartones:
         page = page + 1
         hoja = completa_numero(5, page)
         prepara_hoja_carton(hoja_base_svg, temp_svg, "%c", "%", "svg" + str(hoja) + ".svg", png, hoja_carton, tira1,
                             tira2, carton_id, carton_id2)
+
         tira1 = tira1 + 1
         tira2 = tira2 + 1
         carton_id = carton_id + 6

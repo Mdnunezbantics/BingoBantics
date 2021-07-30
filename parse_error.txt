@@ -1,0 +1,4 @@
+<<
+/Type /Font
+/Subtype /TrueType
+/BaseFont /LANHFD+Bit

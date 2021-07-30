@@ -1,4 +1,7 @@
 import shutil
+# from bz2 import compress
+import PyPDF2
+# from PyPDF2.filters import compress
 from merge_pdf import merge
 import ntpath
 from xml.dom import minidom
@@ -6,6 +9,8 @@ import os
 import codecs
 import cairosvg
 from pdftopng import pdftopng
+from pycparser.ply.cpp import xrange
+
 import datos_variables
 from Funciones.crear_carpetas import crear_carpeta
 from Funciones.varios import completa_numero
@@ -179,8 +184,14 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, png_path,):
             file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
             new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_testigo, name_svg, testigo=True)
             cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
+
+
     pdf_output = os.path.join(pdfs_testigo, "testigos_" + pdf_file_name)
+    pdf_output2 = os.path.join(pdfs_testigo, "testigosc_" + pdf_file_name)
+
+
     merge.Merge(pdf_output).merge_folder(temp_pdf)
+
     shutil.rmtree(temp_pdf)
     shutil.rmtree(temp_svg_original)
     shutil.rmtree(temp_svg_testigo)
