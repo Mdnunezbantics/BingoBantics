@@ -30,7 +30,6 @@ def svgtopng(path_svg, path_png, png_name):
 def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_variable,
                         name_svg, png_path, list_carton, tira1, tira2, carton_id, carton_id2):
     xmldoc = minidom.parse(path_svg_entrada)
-    path_png = os.path.join(path_svg_salida, ntpath.basename(png_path))
     id_carton = 0
     for carton in list_carton:
         id_carton = id_carton + 1
@@ -68,7 +67,9 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
                 for image in xmldoc.getElementsByTagName('image'):
                     if image.getAttribute('id') == str(image_id):
                         image.removeAttribute('sodipodi:absref')
-                        image.setAttribute('sodipodi:absref', path_png)
+                        image.removeAttribute('xlink:href')
+                        image.setAttribute('sodipodi:absref', png_path[:-4])
+                        image.setAttribute('xlink:href', png_path[:-4])
     d_fijos = {
         "%var_cliente%": datos_variables.cliente,
         "%var_tira1%": completa_numero(4, tira1),
@@ -106,6 +107,8 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
     xmldoc = minidom.parse(path_svg_entrada)
     var_testigo = "%TESTIGO%"
     d_variables = {
+        "%var_cliente%": datos_variables.cliente,
+        "%evento%": datos_variables.evento,
         "%var1%": datos_variables.bingo,
         "%var2%": datos_variables.linea,
         "%var3%": datos_variables.dos_linea,
@@ -154,13 +157,13 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
     return new_svg_file
 
 
-def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, png_path,):
+def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir,):
     pdfs_originales = crear_carpeta("pdfs_originales", output_path)
     temp_pdf = crear_carpeta("temp_pdf", output_path)
     list_svg_dir = os.listdir(svgs_dir)
     list_svg_dir.sort()
     temp_svg_original = crear_carpeta("temp_svg_original", output_path)
-    shutil.copy(png_path[:-4], temp_svg_original)
+    # shutil.copy(png_path[:-4], temp_svg_original)
     for file in list_svg_dir:
         if ".svg" in file:
             file_svg = os.path.join(svgs_dir, file)
@@ -173,7 +176,7 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, png_path,):
     shutil.rmtree(temp_pdf)
     temp_pdf = crear_carpeta("temp_pdf", output_path)
     temp_svg_testigo = crear_carpeta("temp_svg_testigo", output_path)
-    shutil.copy(png_path[:-4], temp_svg_testigo)
+    # shutil.copy(png_path[:-4], temp_svg_testigo)
     pdfs_testigo = crear_carpeta("pdfs_testigo", output_path)
     list_news_svg_dir = os.listdir(temp_svg_testigo)
     list_news_svg_dir.sort()
@@ -185,10 +188,7 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, png_path,):
             new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_testigo, name_svg, testigo=True)
             cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
 
-
     pdf_output = os.path.join(pdfs_testigo, "testigos_" + pdf_file_name)
-    pdf_output2 = os.path.join(pdfs_testigo, "testigosc_" + pdf_file_name)
-
 
     merge.Merge(pdf_output).merge_folder(temp_pdf)
 
@@ -196,5 +196,29 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, png_path,):
     shutil.rmtree(temp_svg_original)
     shutil.rmtree(temp_svg_testigo)
     return pdf_output
+
+
+def prepara_svg_para_pdf2(path_svg_entrada, path_svg_salida, name_svg, cartones_png,testigo=False):
+    print("hola")
+
+
+def unesvg_png(path_png, svg_base,  dir_output, name_svg):
+    xmldoc = minidom.parse(svg_base)
+    for image in xmldoc.getElementsByTagName('image'):
+        if image.getAttribute('id') == str("cartones"):
+            image.removeAttribute('sodipodi:absref')
+            image.removeAttribute('xlink:href')
+            image.setAttribute('sodipodi:absref', path_png[:-4])
+            image.setAttribute('xlink:href', path_png[:-4])
+
+
+    new_svg_file = os.path.join(dir_output, name_svg)
+    with codecs.open(new_svg_file, "w", "utf-8") as out:
+        xmldoc.writexml(out)
+    return new_svg_file
+
+
+
+
 
 
