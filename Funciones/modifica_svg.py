@@ -133,14 +133,14 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
         for var in d_variables:
             for text in xmldoc.getElementsByTagName('text'):
                 for tspan in text.getElementsByTagName('tspan'):
-                    if var != "var_cliente":
+                    if var != "%var_cliente%":
                         try:
                             if str(var) in tspan.firstChild.wholeText:
                                 parent = tspan.parentNode
                                 parent.removeChild(tspan)
                         except Exception as e:
                             pass
-                    else:
+                    if var == "%var_cliente%":
                         try:
                             if str(var) in tspan.firstChild.wholeText:
                                 tspan.firstChild.replaceWholeText(

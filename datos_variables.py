@@ -1,4 +1,4 @@
-cantidad_hojas = 5000
+cantidad_hojas = 10
 hojas_por_pdf = 100
 
 salida = "output"
