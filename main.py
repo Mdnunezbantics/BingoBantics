@@ -11,9 +11,10 @@ import shutil
 salida = datos_variables.salida
 
 base_dir = Path(__file__).resolve().parent
-trabajo_completo = input("escriba si para realizar el trabajo completo")
+trabajo_completo = input("escriba si para realizar el trabajo completo ")
 print(trabajo_completo)
 if trabajo_completo == "si":
+    hojas = input("indique la cantidad de hojas a realizar ")
 
     if salida in os.listdir(base_dir):
         print("se encotro carpeta la eliminaremos")
@@ -22,7 +23,7 @@ if trabajo_completo == "si":
     salida_dir = crear_carpeta(salida, base_dir)
 
     print("inicio")
-    preparar_png_cartones(base_dir, salida_dir)
+    preparar_png_cartones(base_dir, salida_dir, hojas)
     print("fin")
 
     print("inicio")
@@ -30,6 +31,6 @@ if trabajo_completo == "si":
     print("inicio")
 
 else:
-    generar_pdf = input("escriba si para generar los pdf")
+    generar_pdf = input("escriba si para generar los pdf ")
     if generar_pdf == "si":
         hacer_pdfs(base_dir, "pdfs", "bingo")

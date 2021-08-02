@@ -7,9 +7,9 @@ from Funciones.varios import completa_numero
 from Prosesos.crear_lista_cartones import crear_lista_cartones
 
 
-def preparar_png_cartones(base_dir, salida_dir):
+def preparar_png_cartones(base_dir, salida_dir, hojas):
 
-    cantidad_hojas = datos_variables.cantidad_hojas
+    cantidad_hojas = int(hojas)
     lista_cartones, lista_hojas = crear_lista_cartones(cantidad_hojas)
     hoja_base_12_cartones = datos_variables.hoja_base_12_cartones
     png_vacio = datos_variables.png_vacio
