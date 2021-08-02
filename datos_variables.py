@@ -1,14 +1,14 @@
-cantidad_hojas = 10
+cantidad_hojas = 5000
 hojas_por_pdf = 100
 
 salida = "output"
-svg_base = "Carton_base.svg"
-hoja_carton_base = "Hoja_carton_base.svg"
+carpeta_fianal_name = "carpeta_hojas_completas"
+bases_svg = "svgs"
+dir_png = "carpeta_pngs_cartones"
+
 hoja_datos_variables = "Hoja_datos_variables.svg"
 hoja_base_12_cartones = "Hoja_base_12_cartones.svg"
 png_vacio = "vacio.png"
-carpeta_fianal_name = "carpeta_hojas_completas"
-
 
 cliente = "BINGO LOS AMIGOS"
 evento = "ESPECIAL DIA DE LA MADRE"

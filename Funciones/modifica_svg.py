@@ -1,7 +1,4 @@
 import shutil
-# from bz2 import compress
-import PyPDF2
-# from PyPDF2.filters import compress
 from merge_pdf import merge
 import ntpath
 from xml.dom import minidom
@@ -9,8 +6,6 @@ import os
 import codecs
 import cairosvg
 from pdftopng import pdftopng
-from pycparser.ply.cpp import xrange
-
 import datos_variables
 from Funciones.crear_carpetas import crear_carpeta
 from Funciones.varios import completa_numero
@@ -71,7 +66,6 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
                         image.setAttribute('sodipodi:absref', png_path[:-4])
                         image.setAttribute('xlink:href', png_path[:-4])
     d_fijos = {
-        "%var_cliente%": datos_variables.cliente,
         "%var_tira1%": completa_numero(4, tira1),
         "%var_tira2%": completa_numero(4, tira2),
         "%carton1%": completa_numero(5, carton_id),
@@ -139,12 +133,21 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
         for var in d_variables:
             for text in xmldoc.getElementsByTagName('text'):
                 for tspan in text.getElementsByTagName('tspan'):
-                    try:
-                        if str(var) in tspan.firstChild.wholeText:
-                            parent = tspan.parentNode
-                            parent.removeChild(tspan)
-                    except Exception as e:
-                        pass
+                    if var != "var_cliente":
+                        try:
+                            if str(var) in tspan.firstChild.wholeText:
+                                parent = tspan.parentNode
+                                parent.removeChild(tspan)
+                        except Exception as e:
+                            pass
+                    else:
+                        try:
+                            if str(var) in tspan.firstChild.wholeText:
+                                tspan.firstChild.replaceWholeText(
+                                    str(tspan.firstChild.wholeText).replace(str(var), str(d_variables.get(var))))
+                        except Exception as e:
+                            pass
+
                     try:
                         if str(var_testigo) in tspan.firstChild.wholeText:
                             tspan.firstChild.replaceWholeText(
@@ -157,13 +160,14 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
     return new_svg_file
 
 
-def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir,):
-    pdfs_originales = crear_carpeta("pdfs_originales", output_path)
+def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir):
+
     temp_pdf = crear_carpeta("temp_pdf", output_path)
+    temp_svg_original = crear_carpeta("temp_svg_original", output_path)
+    pdfs_originales = crear_carpeta("pdfs_originales", output_path)
     list_svg_dir = os.listdir(svgs_dir)
     list_svg_dir.sort()
-    temp_svg_original = crear_carpeta("temp_svg_original", output_path)
-    # shutil.copy(png_path[:-4], temp_svg_original)
+
     for file in list_svg_dir:
         if ".svg" in file:
             file_svg = os.path.join(svgs_dir, file)
@@ -174,12 +178,14 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir,):
     pdf_output = os.path.join(pdfs_originales, "originales_" + pdf_file_name)
     merge.Merge(pdf_output).merge_folder(temp_pdf)
     shutil.rmtree(temp_pdf)
+
     temp_pdf = crear_carpeta("temp_pdf", output_path)
     temp_svg_testigo = crear_carpeta("temp_svg_testigo", output_path)
-    # shutil.copy(png_path[:-4], temp_svg_testigo)
     pdfs_testigo = crear_carpeta("pdfs_testigo", output_path)
+
     list_news_svg_dir = os.listdir(temp_svg_testigo)
     list_news_svg_dir.sort()
+
     for file in list_svg_dir:
         if ".svg" in file:
             file_svg = os.path.join(svgs_dir, file)
@@ -198,27 +204,18 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir,):
     return pdf_output
 
 
-def prepara_svg_para_pdf2(path_svg_entrada, path_svg_salida, name_svg, cartones_png,testigo=False):
-    print("hola")
-
-
 def unesvg_png(path_png, svg_base,  dir_output, name_svg):
     xmldoc = minidom.parse(svg_base)
     for image in xmldoc.getElementsByTagName('image'):
         if image.getAttribute('id') == str("cartones"):
             image.removeAttribute('sodipodi:absref')
             image.removeAttribute('xlink:href')
-            image.setAttribute('sodipodi:absref', path_png[:-4])
-            image.setAttribute('xlink:href', path_png[:-4])
-
+            image.setAttribute('sodipodi:absref', path_png)
+            image.setAttribute('xlink:href', path_png)
 
     new_svg_file = os.path.join(dir_output, name_svg)
     with codecs.open(new_svg_file, "w", "utf-8") as out:
         xmldoc.writexml(out)
     return new_svg_file
-
-
-
-
 
 
