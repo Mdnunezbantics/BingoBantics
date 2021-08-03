@@ -45,7 +45,6 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
                 try:
                     for image in xmldoc.getElementsByTagName('image'):
                         if image.getAttribute('id') == str(image_id):
-                            # print("se encontro variable")
                             parent = image.parentNode
                             parent.removeChild(image)
                 except Exception as e:
@@ -160,48 +159,64 @@ def prepara_svg_para_pdf(path_svg_entrada, path_svg_salida, name_svg, testigo=Fa
     return new_svg_file
 
 
-def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir):
+def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, hacer_testigo=True):
+    if hacer_testigo:
+        temp_pdf = crear_carpeta("temp_pdf", output_path)
+        temp_svg_original = crear_carpeta("temp_svg_original", output_path)
+        pdfs_originales = crear_carpeta("pdfs_originales", output_path)
+        list_svg_dir = os.listdir(svgs_dir)
+        list_svg_dir.sort()
 
-    temp_pdf = crear_carpeta("temp_pdf", output_path)
-    temp_svg_original = crear_carpeta("temp_svg_original", output_path)
-    pdfs_originales = crear_carpeta("pdfs_originales", output_path)
-    list_svg_dir = os.listdir(svgs_dir)
-    list_svg_dir.sort()
+        for file in list_svg_dir:
+            if ".svg" in file:
+                file_svg = os.path.join(svgs_dir, file)
+                name_svg = "temp_" + ntpath.basename(file_svg)
+                file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
+                new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_original, name_svg, testigo=False)
+                cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
+        pdf_output = os.path.join(pdfs_originales, "originales_" + pdf_file_name)
+        merge.Merge(pdf_output).merge_folder(temp_pdf)
+        shutil.rmtree(temp_pdf)
 
-    for file in list_svg_dir:
-        if ".svg" in file:
-            file_svg = os.path.join(svgs_dir, file)
-            name_svg = "temp_" + ntpath.basename(file_svg)
-            file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
-            new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_original, name_svg, testigo=False)
-            cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
-    pdf_output = os.path.join(pdfs_originales, "originales_" + pdf_file_name)
-    merge.Merge(pdf_output).merge_folder(temp_pdf)
-    shutil.rmtree(temp_pdf)
+        temp_pdf = crear_carpeta("temp_pdf", output_path)
+        temp_svg_testigo = crear_carpeta("temp_svg_testigo", output_path)
+        pdfs_testigo = crear_carpeta("pdfs_testigo", output_path)
 
-    temp_pdf = crear_carpeta("temp_pdf", output_path)
-    temp_svg_testigo = crear_carpeta("temp_svg_testigo", output_path)
-    pdfs_testigo = crear_carpeta("pdfs_testigo", output_path)
+        list_news_svg_dir = os.listdir(temp_svg_testigo)
+        list_news_svg_dir.sort()
 
-    list_news_svg_dir = os.listdir(temp_svg_testigo)
-    list_news_svg_dir.sort()
+        for file in list_svg_dir:
+            if ".svg" in file:
+                file_svg = os.path.join(svgs_dir, file)
+                name_svg = "temp_" + ntpath.basename(file_svg)
+                file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
+                new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_testigo, name_svg, testigo=True)
+                cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
 
-    for file in list_svg_dir:
-        if ".svg" in file:
-            file_svg = os.path.join(svgs_dir, file)
-            name_svg = "temp_" + ntpath.basename(file_svg)
-            file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
-            new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_testigo, name_svg, testigo=True)
-            cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
+        pdf_output = os.path.join(pdfs_testigo, "testigos_" + pdf_file_name)
 
-    pdf_output = os.path.join(pdfs_testigo, "testigos_" + pdf_file_name)
+        merge.Merge(pdf_output).merge_folder(temp_pdf)
 
-    merge.Merge(pdf_output).merge_folder(temp_pdf)
+        shutil.rmtree(temp_pdf)
+        shutil.rmtree(temp_svg_original)
+        shutil.rmtree(temp_svg_testigo)
+    if not hacer_testigo:
+        temp_pdf = crear_carpeta("temp_pdf", output_path)
+        temp_svg_original = crear_carpeta("temp_svg_original", output_path)
+        pdfs_originales = crear_carpeta("pdfs_originales", output_path)
+        list_svg_dir = os.listdir(svgs_dir)
+        list_svg_dir.sort()
 
-    shutil.rmtree(temp_pdf)
-    shutil.rmtree(temp_svg_original)
-    shutil.rmtree(temp_svg_testigo)
-    return pdf_output
+        for file in list_svg_dir:
+            if ".svg" in file:
+                file_svg = os.path.join(svgs_dir, file)
+                name_svg = "temp_" + ntpath.basename(file_svg)
+                file_pdf = os.path.join(temp_pdf, file[:-4] + ".pdf")
+                new_file_svg = prepara_svg_para_pdf(file_svg, temp_svg_original, name_svg, testigo=False)
+                cairosvg.svg2pdf(file_obj=open(new_file_svg, "rb"), write_to=file_pdf)
+        pdf_output = os.path.join(pdfs_originales, "originales_" + pdf_file_name)
+        merge.Merge(pdf_output).merge_folder(temp_pdf)
+        shutil.rmtree(temp_pdf)
 
 
 def unesvg_png(path_png, svg_base,  dir_output, name_svg):

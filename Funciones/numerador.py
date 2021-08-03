@@ -29,6 +29,7 @@ def generar_hoja_carton():
     check_cartones = False
     finalizar = False
     while not finalizar:
+        check_cartones = False
         for patron in patrones:
             casilla = 1
             casillax = 1
@@ -83,7 +84,9 @@ def generar_hoja_carton():
         for c1 in cartones:
             check = saca_x(copy.copy(c1))
             check.sort()
+
             if check not in list_carton_general:
+                print(check)
                 list_carton_general.append(check)
             else:
                 print("repe")

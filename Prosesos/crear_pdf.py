@@ -22,7 +22,7 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name):
         png_path = os.path.join(dir_png, str(file))
         name_hoja_svg = "svg" + completa_numero(5, archivo) + ".svg"
         hoja_completa = unesvg_png(png_path, hoja_datos_variables_svg, dir_hojas_completas, name_hoja_svg)
-        print(archivo)
+        print("Hoja Carton " + str(archivo))
         archivo = archivo + 1
 
     svg_list = os.listdir(dir_hojas_completas)
@@ -35,15 +35,14 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name):
     temp_svg = crear_carpeta("temp_svg", output_dir)
     hoja = 0
     pdf = 1
-    print(len(svg_list))
     for svg in svg_list:
         svg_path = os.path.join(dir_hojas_completas, str(svg))
         shutil.copy(svg_path, temp_svg)
         hoja = hoja + 1
         if hoja == datos_variables.hojas_por_pdf:
-            print("Preparamos PDF: hasta", str(pdf * 100))
+            print("Preparamos PDF: hasta la hoja:", str(pdf * 100))
             pdf_file_name = pdfs_name + completa_numero(5, pdf) + ".pdf"
-            multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg)
+            multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg, hacer_testigo=True)
             shutil.rmtree(temp_svg)
             temp_svg = crear_carpeta("temp_svg", output_dir)
             pdf = pdf + 1

@@ -16,8 +16,10 @@ def crear_lista_cartones(cantidad_hojas,):
             cartones_para_hoja = cartones_para_hoja + item
             lista_hojas.append(item)
         if a == 500:
+            print(str(page) + " hojas de 12 cartones generados")
             a = 1
         else:
             a = a + 1
         lista_cartones.append(cartones_para_hoja)
-    return lista_cartones, lista_hojas
+
+    return lista_cartones

@@ -1,16 +1,14 @@
 import os
-import copy
 import datos_variables
 from Funciones.crear_carpetas import crear_carpeta
 from Funciones.modifica_svg import svgtopng, unesvg_png, prepara_hoja_carton
 from Funciones.varios import completa_numero
-from Prosesos.crear_lista_cartones import crear_lista_cartones
 
 
-def preparar_png_cartones(base_dir, salida_dir, hojas):
+def preparar_png_cartones(base_dir, salida_dir, hojas, lista_cartones):
 
     cantidad_hojas = int(hojas)
-    lista_cartones, lista_hojas = crear_lista_cartones(cantidad_hojas)
+
     hoja_base_12_cartones = datos_variables.hoja_base_12_cartones
     png_vacio = datos_variables.png_vacio
     bases = os.path.join(base_dir, datos_variables.bases_svg)
@@ -26,9 +24,8 @@ def preparar_png_cartones(base_dir, salida_dir, hojas):
     dir_pngs = crear_carpeta(datos_variables.dir_png, salida_dir)
 
     png = svgtopng(rec_vacio, bases, png_vacio)
-
     for hoja_carton in lista_cartones:
-        print(page)
+
         page = page + 1
         hoja = completa_numero(5, page)
         name_carton_svg = "svg" + str(hoja) + ".svg"
@@ -41,10 +38,11 @@ def preparar_png_cartones(base_dir, salida_dir, hojas):
         tira2 = tira2 + 1
         carton_id = carton_id + 6
         carton_id2 = carton_id2 + 6
+        print("Hoja Carton_base " + str(page))
 
-    print("--------------")
-    print(len(lista_hojas))
-    print("--------------")
+    # print("--------------")
+    # print(len(lista_cartones) * 6)
+    # print("--------------")
 
 
 
