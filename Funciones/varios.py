@@ -13,6 +13,9 @@ def saca_x(dato):
 
 
 def completa_numero(catidad_digitos, dato):
-    while len(str(dato)) != catidad_digitos:
-        dato = str(0) + str(dato)
+    if catidad_digitos != 1:
+        while len(str(dato)) != catidad_digitos:
+            dato = str(0) + str(dato)
+    else:
+        dato = dato
     return dato

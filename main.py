@@ -65,7 +65,7 @@ print("se realizaran " + str(hojas) + " hojas siendo " + str(int(hojas) * 12) + 
 
 trabajo_completo = input("Realizar el trabajo completo (si/no): ")
 if trabajo_completo == "si":
-
+    testigo = input("Realizar el testigo (si/no): ")
     if salida in os.listdir(base_dir):
         print("Se encotro carpeta la eliminaremos")
         shutil.rmtree(os.path.join(base_dir, salida))
@@ -78,13 +78,20 @@ if trabajo_completo == "si":
     hora = datetime.datetime.now()
     hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
     print(hora)
-
-    print("Inicio proseso 2")
-    hacer_pdfs(base_dir, "pdfs", "bingo")
-    print("Fin proseso 2")
-    hora = datetime.datetime.now()
-    hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
-    print(hora)
+    if testigo == "si":
+        print("Inicio proseso 2")
+        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=True)
+        print("Fin proseso 2")
+        hora = datetime.datetime.now()
+        hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
+        print(hora)
+    else:
+        print("Inicio proseso 2")
+        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=False)
+        print("Fin proseso 2")
+        hora = datetime.datetime.now()
+        hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
+        print(hora)
 
 if trabajo_completo == "no":
     generar_pdf = input("Generar los pdf (si/no): ")

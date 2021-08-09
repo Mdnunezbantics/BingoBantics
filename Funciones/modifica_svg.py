@@ -39,7 +39,7 @@ def prepara_hoja_carton(path_svg_entrada, path_svg_salida, ini_variable, fin_var
                         try:
                             if str(variable) in tspan.firstChild.wholeText:
                                 tspan.firstChild.replaceWholeText(
-                                    str(tspan.firstChild.wholeText).replace(str(variable), str(num)))
+                                    str(tspan.firstChild.wholeText).replace(str(variable), str(completa_numero(int(datos_variables.numeros_x_casilla), num))))
                         except Exception as e:
                             pass
                 try:

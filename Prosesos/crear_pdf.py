@@ -6,7 +6,7 @@ from Funciones.modifica_svg import multi_svgs_a_1_pdf, unesvg_png
 from Funciones.varios import completa_numero
 
 
-def hacer_pdfs(base_dir, salida_dir_name, pdfs_name):
+def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
 
     salida_dir = os.path.join(base_dir, datos_variables.salida)
     bases = os.path.join(base_dir, datos_variables.bases_svg)
@@ -31,26 +31,27 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name):
     if salida_dir_name in os.listdir(salida_dir):
         shutil.rmtree(os.path.join(salida_dir, salida_dir_name))
 
-    output_dir = crear_carpeta(salida_dir_name, salida_dir)
-    temp_svg = crear_carpeta("temp_svg", output_dir)
-    hoja = 0
-    pdf = 1
-    for svg in svg_list:
-        svg_path = os.path.join(dir_hojas_completas, str(svg))
-        shutil.copy(svg_path, temp_svg)
-        hoja = hoja + 1
-        if hoja == datos_variables.hojas_por_pdf:
-            print("Preparamos PDF: hasta la hoja:", str(pdf * 100))
-            pdf_file_name = pdfs_name + completa_numero(5, pdf) + ".pdf"
-            multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg, hacer_testigo=True)
-            shutil.rmtree(temp_svg)
-            temp_svg = crear_carpeta("temp_svg", output_dir)
-            pdf = pdf + 1
-            hoja = 0
+    if preparar_testigo:
+        output_dir = crear_carpeta(salida_dir_name, salida_dir)
+        temp_svg = crear_carpeta("temp_svg", output_dir)
+        hoja = 0
+        pdf = 1
+        for svg in svg_list:
+            svg_path = os.path.join(dir_hojas_completas, str(svg))
+            shutil.copy(svg_path, temp_svg)
+            hoja = hoja + 1
+            if hoja == datos_variables.hojas_por_pdf:
+                print("Preparamos PDF: hasta la hoja:", str(pdf * 100))
+                pdf_file_name = pdfs_name + completa_numero(5, pdf) + ".pdf"
+                multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg, hacer_testigo=True)
+                shutil.rmtree(temp_svg)
+                temp_svg = crear_carpeta("temp_svg", output_dir)
+                pdf = pdf + 1
+                hoja = 0
 
-    pdf_file_name = pdfs_name + completa_numero(5, pdf) + ".pdf"
-    multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg)
-    shutil.rmtree(temp_svg)
+        pdf_file_name = pdfs_name + completa_numero(5, pdf) + ".pdf"
+        multi_svgs_a_1_pdf(pdf_file_name, output_dir, temp_svg)
+        shutil.rmtree(temp_svg)
 
 
 
