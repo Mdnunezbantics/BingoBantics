@@ -96,7 +96,7 @@ if trabajo_completo == "si":
 if trabajo_completo == "no":
     generar_pdf = input("Generar los pdf (si/no): ")
     if generar_pdf == "si":
-        hacer_pdfs(base_dir, "pdfs", "bingo")
+        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=True)
         hora = datetime.datetime.now()
         hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
         print(hora)

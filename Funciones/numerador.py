@@ -30,6 +30,7 @@ def generar_hoja_carton():
     finalizar = False
     while not finalizar:
         check_cartones = False
+        cartones = []
         for patron in patrones:
             casilla = 1
             casillax = 1

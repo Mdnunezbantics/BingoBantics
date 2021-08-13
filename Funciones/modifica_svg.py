@@ -219,14 +219,20 @@ def multi_svgs_a_1_pdf(pdf_file_name, output_path, svgs_dir, hacer_testigo=True)
         shutil.rmtree(temp_pdf)
 
 
-def unesvg_png(path_png, svg_base,  dir_output, name_svg):
+def unesvg_png(path_png1, path_png2, svg_base,  dir_output, name_svg):
     xmldoc = minidom.parse(svg_base)
     for image in xmldoc.getElementsByTagName('image'):
-        if image.getAttribute('id') == str("cartones"):
+        if image.getAttribute('id') == str("carton1"):
             image.removeAttribute('sodipodi:absref')
             image.removeAttribute('xlink:href')
-            image.setAttribute('sodipodi:absref', path_png)
-            image.setAttribute('xlink:href', path_png)
+            image.setAttribute('sodipodi:absref', path_png1)
+            image.setAttribute('xlink:href', path_png1)
+    for image in xmldoc.getElementsByTagName('image'):
+        if image.getAttribute('id') == str("carton2"):
+            image.removeAttribute('sodipodi:absref')
+            image.removeAttribute('xlink:href')
+            image.setAttribute('sodipodi:absref', path_png2)
+            image.setAttribute('xlink:href', path_png2)
 
     new_svg_file = os.path.join(dir_output, name_svg)
     with codecs.open(new_svg_file, "w", "utf-8") as out:
@@ -234,3 +240,134 @@ def unesvg_png(path_png, svg_base,  dir_output, name_svg):
     return new_svg_file
 
 
+def prepara_hoja_carton1(path_svg_entrada, path_svg_salida, ini_variable, fin_variable,
+                        name_svg, png_path, list_carton, tira1, tira2, carton_id, carton_id2):
+    xmldoc = minidom.parse(path_svg_entrada)
+    id_carton = 0
+    for carton in list_carton:
+        id_carton = id_carton + 1
+        dato = 0
+        for num in carton:
+            dato = dato + 1
+            variable = str(ini_variable) + str(id_carton) + "b" + str(dato) + str(fin_variable)
+            image_id = "imagec" + str(id_carton) + "b-" + str(dato)
+            if num != "X":
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                tspan.firstChild.replaceWholeText(
+                                    str(tspan.firstChild.wholeText).replace(str(variable), str(completa_numero(int(datos_variables.numeros_x_casilla), num))))
+                        except Exception as e:
+                            pass
+                try:
+                    for image in xmldoc.getElementsByTagName('image'):
+                        if image.getAttribute('id') == str(image_id):
+                            parent = image.parentNode
+                            parent.removeChild(image)
+                except Exception as e:
+                    pass
+            else:
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                parent = tspan.parentNode
+                                parent.removeChild(tspan)
+                        except Exception as e:
+                            pass
+                for image in xmldoc.getElementsByTagName('image'):
+                    if image.getAttribute('id') == str(image_id):
+                        image.removeAttribute('sodipodi:absref')
+                        image.removeAttribute('xlink:href')
+                        image.setAttribute('sodipodi:absref', png_path[:-4])
+                        image.setAttribute('xlink:href', png_path[:-4])
+    d_fijos = {
+        "%var_tira1%": completa_numero(4, tira1),
+        "%carton1%": completa_numero(5, carton_id),
+        "%carton2%": completa_numero(5, carton_id + 1),
+        "%carton3%": completa_numero(5, carton_id + 2),
+        "%carton4%": completa_numero(5, carton_id + 3),
+        "%carton5%": completa_numero(5, carton_id + 4),
+        "%carton6%": completa_numero(5, carton_id + 5),
+
+    }
+    for var in d_fijos:
+        for text in xmldoc.getElementsByTagName('text'):
+            for tspan in text.getElementsByTagName('tspan'):
+                try:
+                    if str(var) in tspan.firstChild.wholeText:
+                        tspan.firstChild.replaceWholeText(
+                            str(tspan.firstChild.wholeText).replace(str(var), str(d_fijos.get(var))))
+                except Exception as e:
+                    pass
+    new_svg_file = os.path.join(path_svg_salida, name_svg)
+    with codecs.open(new_svg_file, "w", "utf-8") as out:
+        xmldoc.writexml(out)
+    return new_svg_file
+
+
+def prepara_hoja_carton2(path_svg_entrada, path_svg_salida, ini_variable, fin_variable,
+                        name_svg, png_path, list_carton, tira1, tira2, carton_id, carton_id2):
+    xmldoc = minidom.parse(path_svg_entrada)
+    id_carton = 0
+    for carton in list_carton:
+        id_carton = id_carton + 1
+        dato = 0
+        for num in carton:
+            dato = dato + 1
+            variable = str(ini_variable) + str(id_carton) + "b" + str(dato) + str(fin_variable)
+            image_id = "imagec" + str(id_carton) + "b-" + str(dato)
+            if num != "X":
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                tspan.firstChild.replaceWholeText(
+                                    str(tspan.firstChild.wholeText).replace(str(variable), str(completa_numero(int(datos_variables.numeros_x_casilla), num))))
+                        except Exception as e:
+                            pass
+                try:
+                    for image in xmldoc.getElementsByTagName('image'):
+                        if image.getAttribute('id') == str(image_id):
+                            parent = image.parentNode
+                            parent.removeChild(image)
+                except Exception as e:
+                    pass
+            else:
+                for text in xmldoc.getElementsByTagName('text'):
+                    for tspan in text.getElementsByTagName('tspan'):
+                        try:
+                            if str(variable) in tspan.firstChild.wholeText:
+                                parent = tspan.parentNode
+                                parent.removeChild(tspan)
+                        except Exception as e:
+                            pass
+                for image in xmldoc.getElementsByTagName('image'):
+                    if image.getAttribute('id') == str(image_id):
+                        image.removeAttribute('sodipodi:absref')
+                        image.removeAttribute('xlink:href')
+                        image.setAttribute('sodipodi:absref', png_path[:-4])
+                        image.setAttribute('xlink:href', png_path[:-4])
+    d_fijos = {
+        "%var_tira1%": completa_numero(4, tira2),
+        "%carton1%": completa_numero(5, carton_id2 ),
+        "%carton2%": completa_numero(5, carton_id2 + 1),
+        "%carton3%": completa_numero(5, carton_id2 + 2),
+        "%carton4%": completa_numero(5, carton_id2 + 3),
+        "%carton5%": completa_numero(5, carton_id2 + 4),
+        "%carton6%": completa_numero(5, carton_id2 + 5),
+    }
+    for var in d_fijos:
+        for text in xmldoc.getElementsByTagName('text'):
+            for tspan in text.getElementsByTagName('tspan'):
+                try:
+                    if str(var) in tspan.firstChild.wholeText:
+                        tspan.firstChild.replaceWholeText(
+                            str(tspan.firstChild.wholeText).replace(str(var), str(d_fijos.get(var))))
+                except Exception as e:
+                    pass
+    new_svg_file = os.path.join(path_svg_salida, name_svg)
+    with codecs.open(new_svg_file, "w", "utf-8") as out:
+        xmldoc.writexml(out)
+    return new_svg_file

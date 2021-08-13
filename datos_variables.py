@@ -1,4 +1,4 @@
-hojas_por_pdf = 200
+hojas_por_pdf = 250
 numeros_x_casilla = 2
 
 salida = "output"
