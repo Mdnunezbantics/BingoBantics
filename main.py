@@ -42,21 +42,24 @@ if preparar_lista == "si":
     file_cartones.close()
 
 if preparar_lista == "no":
-    pickle_file_name = 'pickle-' + str(fecha) + "-" + slugify(datos_variables.cliente)
-    if pickle_file_name in os.listdir(pickle_dir):
-        file_cartones = open(os.path.join(pickle_dir, pickle_file_name), 'rb')
-        objeto_cartones = pickle.load(file_cartones)
-        lista_cartones = objeto_cartones.lista_cartones
-        hojas = int(objeto_cartones.cantidad_de_hojas)
-        file_cartones.close()
-    else:
-        print("Pickle File no encontrado")
-        pickle_file_name = input("especifique pickle file name ")
-        file_cartones = open(os.path.join(pickle_dir, str(pickle_file_name)), 'rb')
-        objeto_cartones = pickle.load(file_cartones)
-        lista_cartones = objeto_cartones.lista_cartones
-        hojas = objeto_cartones.cantidad_de_hojas
-        file_cartones.close()
+    # pickle_file_name = 'pickle-' + str(fecha) + "-" + slugify(datos_variables.cliente)
+    # if pickle_file_name in os.listdir(pickle_dir):
+    #     file_cartones = open(os.path.join(pickle_dir, pickle_file_name), 'rb')
+    #     objeto_cartones = pickle.load(file_cartones)
+    #     lista_cartones = objeto_cartones.lista_cartones
+    #     hojas = int(objeto_cartones.cantidad_de_hojas)
+    #     file_cartones.close()
+    # else:
+    # print("Pickle File no encontrado")
+    pickle_list = os.listdir(pickle_dir)
+    for pickle_file in pickle_list:
+        print(pickle_list.index(pickle_file), "-", pickle_file)
+    pickle_file_name = input("seleccione pickle file: ")
+    file_cartones = open(os.path.join(pickle_dir, str(pickle_list[int(pickle_file_name)])), 'rb')
+    objeto_cartones = pickle.load(file_cartones)
+    lista_cartones = objeto_cartones.lista_cartones
+    hojas = objeto_cartones.cantidad_de_hojas
+    file_cartones.close()
 hora = datetime.datetime.now()
 hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
 print(hora)
@@ -96,7 +99,7 @@ if trabajo_completo == "si":
 if trabajo_completo == "no":
     generar_pdf = input("Generar los pdf (si/no): ")
     if generar_pdf == "si":
-        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=True)
+        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=False)
         hora = datetime.datetime.now()
         hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
         print(hora)
