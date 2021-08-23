@@ -22,9 +22,14 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
     png_list.sort()
     archivo = 1
     list_files = []
-
+    desde = input("desde que numero se imprime: ")
+    hasta = input("hasta que numero se imprime: ")
     for file in png_list:
-        list_files.append(str(file))
+        # print(file[-8:-4])
+        verif = file[-8:-4]
+        if int(verif) >= int(desde):
+            if int(verif) <= int(hasta):
+                list_files.append(str(file))
         if len(list_files) == 1000:
             for item in range(len(list_files)//2):
                 png_path = os.path.join(dir_png, str(list_files[int(item)]))
@@ -40,7 +45,6 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
         for item in range(len(list_files)//2):
             png_path = os.path.join(dir_png, str(list_files[int(item)]))
             png_path2 = os.path.join(dir_png, str(list_files[int(item) + (len(list_files)//2)]))
-            print(archivo)
             name_hoja_svg = "svg" + completa_numero(5, archivo) + ".svg"
             hoja_completa = unesvg_png(png_path, png_path2, hoja_datos_variables_svg2, dir_hojas_completas,
                                        name_hoja_svg)
