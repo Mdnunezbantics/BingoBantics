@@ -25,7 +25,7 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
 
     for file in png_list:
         list_files.append(str(file))
-        if len(list_files) == 500:
+        if len(list_files) == 1000:
             for item in range(len(list_files)//2):
                 png_path = os.path.join(dir_png, str(list_files[int(item)]))
                 png_path2 = os.path.join(dir_png, str(list_files[int(item) + (len(list_files)//2)]))
@@ -36,7 +36,7 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
             list_files = []
     print(len(list_files))
     print(list_files)
-    if len(list_files) <= 500:
+    if len(list_files) <= 1000:
         for item in range(len(list_files)//2):
             png_path = os.path.join(dir_png, str(list_files[int(item)]))
             png_path2 = os.path.join(dir_png, str(list_files[int(item) + (len(list_files)//2)]))
