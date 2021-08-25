@@ -1,7 +1,5 @@
 import pickle
 import datetime
-
-import slugify as slugify
 import datos_variables
 from Funciones.crear_carpetas import crear_carpeta
 from Prosesos.crear_lista_cartones import crear_lista_cartones
@@ -42,15 +40,6 @@ if preparar_lista == "si":
     file_cartones.close()
 
 if preparar_lista == "no":
-    # pickle_file_name = 'pickle-' + str(fecha) + "-" + slugify(datos_variables.cliente)
-    # if pickle_file_name in os.listdir(pickle_dir):
-    #     file_cartones = open(os.path.join(pickle_dir, pickle_file_name), 'rb')
-    #     objeto_cartones = pickle.load(file_cartones)
-    #     lista_cartones = objeto_cartones.lista_cartones
-    #     hojas = int(objeto_cartones.cantidad_de_hojas)
-    #     file_cartones.close()
-    # else:
-    # print("Pickle File no encontrado")
     pickle_list = os.listdir(pickle_dir)
     for pickle_file in pickle_list:
         print(pickle_list.index(pickle_file), "-", pickle_file)
@@ -97,9 +86,14 @@ if trabajo_completo == "si":
         print(hora)
 
 if trabajo_completo == "no":
-    generar_pdf = input("Generar los pdf (si/no): ")
+    generar_pdf = input("Generar solo los pdf Originales (si/no): ")
     if generar_pdf == "si":
         hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=False)
+        hora = datetime.datetime.now()
+        hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
+        print(hora)
+    if generar_pdf == "no":
+        hacer_pdfs(base_dir, "pdfs", "bingo", preparar_testigo=True)
         hora = datetime.datetime.now()
         hora = str(hora.hour) + ":" + str(hora.minute) + ":" + str(hora.second)
         print(hora)

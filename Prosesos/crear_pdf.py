@@ -12,7 +12,7 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
     bases = os.path.join(base_dir, datos_variables.bases_svg)
     hoja_datos_variables = datos_variables.hoja_datos_variables
     hoja_datos_variables_svg = os.path.join(bases, hoja_datos_variables)
-    hoja_datos_variables_svg2 = os.path.join(bases, "Hoja_datos_variables2.svg")
+    # hoja_datos_variables_svg2 = os.path.join(bases, "Hoja_datos_variables2.svg")
     if datos_variables.carpeta_fianal_name in os.listdir(salida_dir):
         shutil.rmtree(os.path.join(salida_dir, datos_variables.carpeta_fianal_name))
     dir_hojas_completas = crear_carpeta(datos_variables.carpeta_fianal_name, salida_dir)
@@ -35,7 +35,7 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
                 png_path = os.path.join(dir_png, str(list_files[int(item)]))
                 png_path2 = os.path.join(dir_png, str(list_files[int(item) + (len(list_files)//2)]))
                 name_hoja_svg = "svg" + completa_numero(5, archivo) + ".svg"
-                hoja_completa = unesvg_png(png_path, png_path2, hoja_datos_variables_svg2, dir_hojas_completas, name_hoja_svg)
+                hoja_completa = unesvg_png(png_path, png_path2, hoja_datos_variables_svg, dir_hojas_completas, name_hoja_svg)
                 print("Hoja Carton " + str(archivo))
                 archivo = archivo + 1
             list_files = []
@@ -46,18 +46,10 @@ def hacer_pdfs(base_dir, salida_dir_name, pdfs_name, preparar_testigo=False):
             png_path = os.path.join(dir_png, str(list_files[int(item)]))
             png_path2 = os.path.join(dir_png, str(list_files[int(item) + (len(list_files)//2)]))
             name_hoja_svg = "svg" + completa_numero(5, archivo) + ".svg"
-            hoja_completa = unesvg_png(png_path, png_path2, hoja_datos_variables_svg2, dir_hojas_completas,
+            hoja_completa = unesvg_png(png_path, png_path2, hoja_datos_variables_svg, dir_hojas_completas,
                                        name_hoja_svg)
             print("Hoja Carton " + str(archivo))
             archivo = archivo + 1
-
-
-    # for file in png_list:
-    #     png_path = os.path.join(dir_png, str(file))
-    #     name_hoja_svg = "svg" + completa_numero(5, archivo) + ".svg"
-    #     hoja_completa = unesvg_png(png_path, hoja_datos_variables_svg, dir_hojas_completas, name_hoja_svg)
-    #     print("Hoja Carton " + str(archivo))
-    #     archivo = archivo + 1
 
     svg_list = os.listdir(dir_hojas_completas)
     svg_list.sort()

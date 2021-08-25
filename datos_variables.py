@@ -6,8 +6,8 @@ carpeta_fianal_name = "carpeta_hojas_completas"
 bases_svg = "svgs"
 dir_png = "carpeta_pngs_cartones"
 
-hoja_datos_variables = "Hoja_datos_variables.svg"
-hoja_base_12_cartones = "Hoja_base_12_cartones.svg"
+hoja_datos_variables = "Hoja_datos_variables2.svg"
+hoja_base_12_cartones = "Hoja_base_6_cartones.svg"
 png_vacio = "vacio.png"
 
 cliente = "BINGO LOS KILOMETROS"
